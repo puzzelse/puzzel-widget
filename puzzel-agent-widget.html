@@ -255,7 +255,7 @@
 
       <div class="field full">
         <label>Conversation topics</label>
-        <div class="check-group" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
+        <div class="check-group">
           <label class="check-item"><input type="checkbox" name="topic" value="Main topics table"> Main topics table</label>
           <label class="check-item"><input type="checkbox" name="topic" value="Subtopics table"> Subtopics table</label>
           <label class="check-item"><input type="checkbox" name="topic" value="Relationship with one dominant and multiple submissives"> Relationship with one dominant and multiple submissives</label>
@@ -263,21 +263,6 @@
         </div>
       </div>
 
-    </div>
-  </div>
-</div>
-
-<!-- ── CALL OUTCOME ── -->
-<div class="section">
-  <div class="section-header">Call outcome</div>
-  <div class="section-body">
-    <div class="disposition-group">
-      <button class="disposition-btn" onclick="selDP(this)">Resolved</button>
-      <button class="disposition-btn" onclick="selDP(this)">Escalated</button>
-      <button class="disposition-btn" onclick="selDP(this)">Callback booked</button>
-      <button class="disposition-btn" onclick="selDP(this)">No action</button>
-      <button class="disposition-btn" onclick="selDP(this)">Transferred</button>
-      <button class="disposition-btn" onclick="selDP(this)">Voicemail</button>
     </div>
   </div>
 </div>
@@ -323,11 +308,6 @@
   }
 
   /* ── HELPERS ── */
-  function selDP(btn) {
-    document.querySelectorAll('.disposition-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-  }
-
   function getChecked(name) {
     return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
       .map(cb => cb.value).join(', ') || 'Not recorded';
@@ -339,12 +319,6 @@
     return Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
   }
 
-  function getSelectedDisposition() {
-    const sel = document.querySelector('.disposition-btn.selected');
-    return sel ? sel.textContent : 'Not recorded';
-  }
-
-  /* ── SAVE ── */
   async function saveForm() {
     const btn = document.getElementById('saveBtn');
     btn.textContent = 'Saving…';
@@ -359,8 +333,7 @@
       age:         document.getElementById('fAge').value          || 'Not recorded',
       need:        getChecked('need'),
       satisfaction:document.getElementById('fSatisfaction').value || 'Not recorded',
-      topics:      getChecked('topic'),
-      outcome:     getSelectedDisposition()
+      topics:      getChecked('topic')
     };
 
     try {
@@ -389,7 +362,6 @@
   function clearForm() {
     ['fTarget','fAge','fSatisfaction'].forEach(id => document.getElementById(id).value = '');
     document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-    document.querySelectorAll('.disposition-btn').forEach(b => b.classList.remove('selected'));
   }
 </script>
 </body>
