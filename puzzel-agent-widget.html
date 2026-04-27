@@ -333,7 +333,11 @@
   /* ── PUZZEL WIDGET API ── */
   const AGENT_APP_ORIGIN = 'https://agent.puzzel.com';
   let port = null;
-  let callMeta = { cli: '', queue: '', callStart: null };
+  let callMeta = {
+    cli: '', queue: '', service: '', requestId: '',
+    agentName: '', agentId: '', waitTime: '',
+    callStart: null
+  };
 
   window.addEventListener('message', (message) => {
     if (message.origin !== AGENT_APP_ORIGIN) return;
@@ -343,21 +347,47 @@
       port.postMessage({ subscribe: 'requestAccepted' });
       port.postMessage({ subscribe: 'requestConnected' });
       port.postMessage({ subscribe: 'requestEnded' });
+      // Request agent info on load
+      port.postMessage({ call: 'agent.userName' });
+      port.postMessage({ call: 'agent.userId' });
     }
   });
 
   function handleWidgetMessage(message) {
     const data = message.data;
-    if (!data || data.type !== 'event') return;
-    if (data.name === 'requestAccepted' || data.name === 'requestConnected') {
-      const v = data.value || {};
-      callMeta.cli       = v.callerNumber || v.ani || v.cli || '';
-      callMeta.queue     = v.queueKey || v.queueName || v.serviceName || '';
-      callMeta.callStart = new Date();
+    if (!data) return;
+
+    // Handle events
+    if (data.type === 'event') {
+      if (data.name === 'requestAccepted' || data.name === 'requestConnected') {
+        const v = data.value || {};
+        callMeta.cli       = v.callerNumber || v.ani || v.cli || v.callerNo || '';
+        callMeta.queue     = v.queueKey || v.queueName || v.serviceName || v.queue || '';
+        callMeta.service   = v.service || v.serviceId || v.serviceName || '';
+        callMeta.requestId = v.requestId || v.callId || v.id || '';
+        callMeta.waitTime  = v.waitTime  || v.queueTime || '';
+        callMeta.callStart = new Date();
+        // Request richer call data from the Call Interface
+        port.postMessage({ call: 'call.getRequestInfo' });
+      }
+
+      if (data.name === 'requestEnded') {
+        clearForm();
+        callMeta = { cli:'', queue:'', service:'', requestId:'', agentName:'', agentId:'', waitTime:'', callStart:null };
+      }
     }
-    if (data.name === 'requestEnded') {
-      clearForm();
-      callMeta = { cli: '', queue: '', callStart: null };
+
+    // Handle results from port.postMessage({ call: ... })
+    if (data.type === 'result') {
+      if (data.name === 'agent.userName')  callMeta.agentName = data.value || '';
+      if (data.name === 'agent.userId')    callMeta.agentId   = data.value || '';
+      if (data.name === 'call.getRequestInfo' && data.value) {
+        const r = data.value;
+        if (!callMeta.cli)       callMeta.cli       = r.callerNumber || r.ani || r.cli || '';
+        if (!callMeta.queue)     callMeta.queue     = r.queueName    || r.serviceName  || '';
+        if (!callMeta.requestId) callMeta.requestId = r.requestId    || r.id           || '';
+        if (!callMeta.waitTime)  callMeta.waitTime  = r.waitTime     || r.queueTime    || '';
+      }
     }
   }
 
@@ -381,8 +411,13 @@
 
     const payload = {
       timestamp:    new Date().toLocaleString('en-GB'),
-      cli:          callMeta.cli   || 'N/A',
-      queue:        callMeta.queue || 'N/A',
+      cli:          callMeta.cli        || 'N/A',
+      queue:        callMeta.queue      || 'N/A',
+      service:      callMeta.service    || 'N/A',
+      requestId:    callMeta.requestId  || 'N/A',
+      agentName:    callMeta.agentName  || 'N/A',
+      agentId:      callMeta.agentId    || 'N/A',
+      waitTime:     callMeta.waitTime   || 'N/A',
       duration:     getCallDuration(),
       target:       document.getElementById('fTarget').value       || 'Not recorded',
       age:          document.getElementById('fAge').value          || 'Not recorded',
