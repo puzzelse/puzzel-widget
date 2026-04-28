@@ -19,8 +19,10 @@
     --white:   #FFFFFF;
     --offwhite:#F7F7F7;
     --border:  rgba(0,0,0,0.1);
+    --border-strong: rgba(0,0,0,0.18);
     --text:    #111111;
     --subtext: #444444;
+    --muted:   #888888;
     --font-head: 'Oswald', sans-serif;
     --font-body: 'Open Sans', sans-serif;
     --radius: 6px;
@@ -41,7 +43,6 @@
     align-items: center;
     gap: 12px;
   }
-
   .kt-logo {
     font-family: var(--font-head);
     font-size: 18px;
@@ -51,7 +52,6 @@
     line-height: 1.1;
     color: var(--black);
   }
-
   .kt-logo span {
     display: block;
     font-size: 11px;
@@ -61,18 +61,13 @@
     text-transform: uppercase;
     margin-top: 1px;
   }
-
   .kt-logo-icon {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     background: var(--black);
     border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-
   .kt-logo-icon svg { display: block; }
 
   /* ── BODY ── */
@@ -86,7 +81,6 @@
     margin-bottom: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.07);
   }
-
   .section-header {
     padding: 7px 14px;
     font-family: var(--font-head);
@@ -96,10 +90,10 @@
     text-transform: uppercase;
     color: var(--white);
   }
-
   .section-header.green  { background: var(--green);  color: var(--black); }
   .section-header.purple { background: var(--purple); }
   .section-header.cyan   { background: var(--cyan);   color: var(--black); }
+  .section-header.orange { background: var(--orange); color: var(--black); }
 
   .section-body { padding: 12px 14px; }
 
@@ -109,7 +103,6 @@
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
-
   .field { display: flex; flex-direction: column; }
   .field.full { grid-column: span 2; }
 
@@ -129,13 +122,12 @@
     font-size: 13px;
     color: var(--text);
     background: var(--white);
-    border: 1.5px solid var(--border);
+    border: 1.5px solid var(--border-strong);
     border-radius: var(--radius);
     padding: 8px 10px;
     outline: none;
     transition: border-color 0.15s;
   }
-
   .field select:focus {
     border-color: var(--purple);
     box-shadow: 0 0 0 3px rgba(160,123,212,0.15);
@@ -143,7 +135,6 @@
 
   /* ── CHECKBOXES ── */
   .check-group { display: flex; flex-direction: column; gap: 4px; }
-
   .check-item {
     display: flex;
     align-items: center;
@@ -156,20 +147,81 @@
     border-radius: var(--radius);
     transition: background 0.1s;
   }
-
   .check-item:hover { background: var(--offwhite); }
-
   .check-item input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
+    width: 15px; height: 15px;
     accent-color: var(--purple);
-    flex-shrink: 0;
+    flex-shrink: 0; cursor: pointer;
+  }
+
+  /* ── REFER? PILL BUTTONS ── */
+  .refer-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .refer-btn {
+    flex: 1;
+    font-family: var(--font-head);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 9px 10px;
+    border-radius: var(--radius);
+    border: 2px solid var(--border-strong);
+    background: var(--white);
+    color: var(--subtext);
     cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .refer-btn:hover {
+    border-color: var(--orange);
+    color: var(--black);
+  }
+  .refer-btn.active-referral.selected {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: var(--black);
+  }
+  .refer-btn.no-link.selected {
+    background: var(--purple);
+    border-color: var(--purple);
+    color: var(--white);
+  }
+
+  /* ── CONDITIONAL FIELDS — slide in/out ── */
+  .conditional-fields {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1.5px dashed rgba(245,166,35,0.4);
+    animation: slideDown 0.2s ease;
+  }
+  .conditional-fields.visible {
+    display: flex;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Label for conditional section */
+  .conditional-label {
+    font-family: var(--font-head);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: -4px;
   }
 
   /* ── ACTION BUTTONS ── */
   .action-row { display: flex; gap: 8px; margin-top: 8px; }
-
   .btn {
     font-family: var(--font-head);
     font-size: 13px;
@@ -183,21 +235,10 @@
     flex: 1;
     transition: filter 0.15s;
   }
-
-  .btn-save {
-    background: var(--orange);
-    color: var(--black);
-  }
-
+  .btn-save { background: var(--orange); color: var(--black); }
   .btn-save:hover { filter: brightness(1.08); }
   .btn-save:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
-
-  .btn-clear {
-    background: var(--offwhite);
-    color: var(--subtext);
-    border: 1.5px solid var(--border);
-  }
-
+  .btn-clear { background: var(--offwhite); color: var(--subtext); border: 1.5px solid var(--border); }
   .btn-clear:hover { background: #ebebeb; }
 
   /* ── BANNERS ── */
@@ -214,7 +255,6 @@
     text-transform: uppercase;
     margin-bottom: 8px;
   }
-
   .banner.success { background: var(--green); color: var(--black); }
   .banner.error   { background: var(--pink);  color: var(--white); }
 </style>
@@ -244,7 +284,7 @@
   <div class="banner success" id="bannerSuccess">✓ &nbsp;Opgeslagen — saved successfully</div>
   <div class="banner error"   id="bannerError">✕ &nbsp;Save failed — check Apps Script URL</div>
 
-  <!-- Caller Details -->
+  <!-- ── CALLER DETAILS ── -->
   <div class="section">
     <div class="section-header green">Caller details</div>
     <div class="section-body">
@@ -305,7 +345,7 @@
     </div>
   </div>
 
-  <!-- Conversation Topics -->
+  <!-- ── CONVERSATION TOPICS ── -->
   <div class="section">
     <div class="section-header purple">Conversation topics</div>
     <div class="section-body">
@@ -318,7 +358,70 @@
     </div>
   </div>
 
-  <!-- Actions -->
+  <!-- ── REFERRAL ── -->
+  <div class="section">
+    <div class="section-header orange">Referral &amp; Intervention</div>
+    <div class="section-body">
+
+      <!-- Referral Intervention — always visible -->
+      <div class="field full">
+        <label>Referral intervention</label>
+        <select id="fReferralIntervention" onchange="handleInterventionChange(this.value)">
+          <option value="">Select…</option>
+          <option>113</option>
+          <option>Fier</option>
+          <option>Sense</option>
+          <option>Safe Home</option>
+          <option>Villa Pinedo</option>
+        </select>
+      </div>
+
+      <!-- Conditional fields — only shown when 113 is selected -->
+      <div class="conditional-fields" id="conditionalFields">
+        <p class="conditional-label">113 referral — additional details required</p>
+
+        <!-- Refer? -->
+        <div class="field full">
+          <label>Refer?</label>
+          <div class="refer-group">
+            <button type="button" class="refer-btn active-referral"
+                    onclick="selectRefer(this, 'Active Referral')">
+              ↗ Active Referral
+            </button>
+            <button type="button" class="refer-btn no-link"
+                    onclick="selectRefer(this, 'No Active Link')">
+              — No Active Link
+            </button>
+          </div>
+        </div>
+
+        <div class="field-grid">
+
+          <div class="field">
+            <label>Reason</label>
+            <select id="fReason">
+              <option value="">Select…</option>
+              <option>Child is thinking about it</option>
+              <option>Child contacted us directly</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Three-way conversation established</label>
+            <select id="fThreeWay">
+              <option value="">Select…</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ACTIONS ── -->
   <div class="action-row">
     <button class="btn btn-clear" onclick="clearForm()">Clear</button>
     <button class="btn btn-save" id="saveBtn" onclick="saveForm()">Save &amp; wrap up</button>
@@ -328,15 +431,17 @@
 
 <script>
   /* ── CONFIG ── */
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBVAXqa5KP1R6OZf9EQThG_TL1DdJbbDo1hlpwJ3ik7BB5T0hSyLxd7ZZal8izOQrh/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAhKWn0XU0IHTSy6PagHXOMtGq6Kuu9WQekNHk5FD7C1SiAmVUxjmIelIyUBblquPm/exec';
+
+  /* ── STATE ── */
+  let referChoice = '';
 
   /* ── PUZZEL WIDGET API ── */
   const AGENT_APP_ORIGIN = 'https://agent.puzzel.com';
   let port = null;
   let callMeta = {
     cli: '', queue: '', service: '', requestId: '',
-    agentName: '', agentId: '', waitTime: '',
-    callStart: null
+    agentName: '', agentId: '', waitTime: '', callStart: null
   };
 
   window.addEventListener('message', (message) => {
@@ -347,7 +452,6 @@
       port.postMessage({ subscribe: 'requestAccepted' });
       port.postMessage({ subscribe: 'requestConnected' });
       port.postMessage({ subscribe: 'requestEnded' });
-      // Request agent info on load
       port.postMessage({ call: 'agent.userName' });
       port.postMessage({ call: 'agent.userId' });
     }
@@ -356,8 +460,6 @@
   function handleWidgetMessage(message) {
     const data = message.data;
     if (!data) return;
-
-    // Handle events
     if (data.type === 'event') {
       if (data.name === 'requestAccepted' || data.name === 'requestConnected') {
         const v = data.value || {};
@@ -367,17 +469,13 @@
         callMeta.requestId = v.requestId || v.callId || v.id || '';
         callMeta.waitTime  = v.waitTime  || v.queueTime || '';
         callMeta.callStart = new Date();
-        // Request richer call data from the Call Interface
         port.postMessage({ call: 'call.getRequestInfo' });
       }
-
       if (data.name === 'requestEnded') {
         clearForm();
         callMeta = { cli:'', queue:'', service:'', requestId:'', agentName:'', agentId:'', waitTime:'', callStart:null };
       }
     }
-
-    // Handle results from port.postMessage({ call: ... })
     if (data.type === 'result') {
       if (data.name === 'agent.userName')  callMeta.agentName = data.value || '';
       if (data.name === 'agent.userId')    callMeta.agentId   = data.value || '';
@@ -389,6 +487,29 @@
         if (!callMeta.waitTime)  callMeta.waitTime  = r.waitTime     || r.queueTime    || '';
       }
     }
+  }
+
+  /* ── CONDITIONAL LOGIC — show extra fields when 113 selected ── */
+  function handleInterventionChange(value) {
+    const conditionalFields = document.getElementById('conditionalFields');
+    if (value === '113') {
+      conditionalFields.classList.add('visible');
+    } else {
+      conditionalFields.classList.remove('visible');
+      // Clear the dependent fields when hidden
+      ['fReason', 'fThreeWay'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.querySelectorAll('.refer-btn').forEach(b => b.classList.remove('selected'));
+      referChoice = '';
+    }
+  }
+
+  /* ── REFER? PILL SELECTION ── */
+  function selectRefer(btn, value) {
+    document.querySelectorAll('.refer-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    referChoice = value;
   }
 
   /* ── HELPERS ── */
@@ -409,21 +530,27 @@
     btn.textContent = 'Saving…';
     btn.disabled = true;
 
+    const is113 = document.getElementById('fReferralIntervention').value === '113';
+
     const payload = {
-      timestamp:    new Date().toLocaleString('en-GB'),
-      cli:          callMeta.cli        || 'N/A',
-      queue:        callMeta.queue      || 'N/A',
-      service:      callMeta.service    || 'N/A',
-      requestId:    callMeta.requestId  || 'N/A',
-      agentName:    callMeta.agentName  || 'N/A',
-      agentId:      callMeta.agentId    || 'N/A',
-      waitTime:     callMeta.waitTime   || 'N/A',
-      duration:     getCallDuration(),
-      target:       document.getElementById('fTarget').value       || 'Not recorded',
-      age:          document.getElementById('fAge').value          || 'Not recorded',
-      need:         getChecked('need'),
-      satisfaction: document.getElementById('fSatisfaction').value || 'Not recorded',
-      topics:       getChecked('topic')
+      timestamp:            new Date().toLocaleString('en-GB'),
+      cli:                  callMeta.cli        || 'N/A',
+      queue:                callMeta.queue      || 'N/A',
+      service:              callMeta.service    || 'N/A',
+      requestId:            callMeta.requestId  || 'N/A',
+      agentName:            callMeta.agentName  || 'N/A',
+      agentId:              callMeta.agentId    || 'N/A',
+      waitTime:             callMeta.waitTime   || 'N/A',
+      duration:             getCallDuration(),
+      target:               document.getElementById('fTarget').value             || 'Not recorded',
+      age:                  document.getElementById('fAge').value                || 'Not recorded',
+      need:                 getChecked('need'),
+      satisfaction:         document.getElementById('fSatisfaction').value       || 'Not recorded',
+      topics:               getChecked('topic'),
+      referralIntervention: document.getElementById('fReferralIntervention').value || 'Not recorded',
+      refer:                is113 ? (referChoice                                 || 'Not recorded') : 'N/A',
+      reason:               is113 ? (document.getElementById('fReason').value   || 'Not recorded') : 'N/A',
+      threeWay:             is113 ? (document.getElementById('fThreeWay').value || 'Not recorded') : 'N/A',
     };
 
     try {
@@ -450,8 +577,12 @@
   }
 
   function clearForm() {
-    ['fTarget','fAge','fSatisfaction'].forEach(id => document.getElementById(id).value = '');
+    ['fTarget','fAge','fSatisfaction','fReferralIntervention','fReason','fThreeWay']
+      .forEach(id => document.getElementById(id).value = '');
     document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.refer-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('conditionalFields').classList.remove('visible');
+    referChoice = '';
   }
 </script>
 </body>
